@@ -4,6 +4,9 @@
  import morgan from 'morgan';
  import authRouter from './src/routes/auth.js';
  import { connectDB } from './src/config/db.js';
+import filesRouter from './src/routes/files.js';
+import patientRouter from './src/routes/patient.js';
+
 
 dotenv.config();
 const app = express();
@@ -14,6 +17,8 @@ const app = express();
  connectDB();
 
  app.use('/api/auth', authRouter);
+ app.use('/api/files', filesRouter);
+app.use('/api/patient', patientRouter);
  
  app.get('/', (req, res) => res.send('Orthopedic Platform API running'));
  
