@@ -17,9 +17,9 @@ const app = express();
 
  connectDB();
 
- app.use('/api/auth', authRouter);
- app.use('/api/files', filesRouter);
-app.use('/api/patient', patientRouter);
+ app.use('/api/v1/auth', authRouter);
+ app.use('/api/v1/files', filesRouter);
+app.use('/api/v1/patient', patientRouter);
 
 app.use(errorHandler);
 

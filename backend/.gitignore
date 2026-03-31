@@ -145,3 +145,5 @@ vite.config.ts.timestamp-*
 .vscode
 .github/agents
 .github/prompts
+.gemini
+/specs
