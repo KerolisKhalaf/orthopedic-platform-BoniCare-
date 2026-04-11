@@ -12,8 +12,13 @@ import patientRouter from './src/routes/patient.js';
 import doctorRouter from './src/routes/doctor.js';
 import appointmentRouter from './src/routes/appointment.js';
 
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './src/swagger.js';
+
 dotenv.config();
 const app = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
