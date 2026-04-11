@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import { connectDB } from './src/config/db.js';
-import { errorHandler } from "./src/middleware/errorHandler.js";
+import errorHandler from "./src/middleware/errorHandler.js";
 
 // Routes
 import authRouter from './src/routes/auth.js';
@@ -14,6 +14,13 @@ import appointmentRouter from './src/routes/appointment.js';
 
 dotenv.config();
 const app = express();
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION! ðŸ’¥ Shutting down...');
+  console.error(err.name, err.message);
+  process.exit(1);
+});
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -32,4 +39,13 @@ app.use(errorHandler);
 app.get('/', (req, res) => res.send('BoniCare Orthopedic Platform API running'));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED REJECTION! ðŸ’¥ Shutting down...');
+  console.error(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
