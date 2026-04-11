@@ -4,6 +4,22 @@ import MedicalFile from '../models/medicalFile.js';
 import AiReport from '../models/AiReport.js'; 
 import AppError from '../utils/AppError.js';
 
+/**
+ * @openapi
+ * /patient/dashboard:
+ *   get:
+ *     tags: [Patients]
+ *     summary: Get patient dashboard
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Dashboard data retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Patient profile not found
+ */
 export const getPatientDashboard = async (req, res) => {
   // req.user coming from auth middleware (id, role)
   const userId = req.user.id;

@@ -5,6 +5,33 @@ import AppError from '../utils/AppError.js';
  
 const saltRounds = 10;
 
+/**
+ * @openapi
+ * /auth/signup:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name, email, password]
+ *             properties:
+ *               name: { type: string }
+ *               email: { type: string, format: email }
+ *               password: { type: string }
+ *               phone: { type: string }
+ *               role: { type: string, enum: [patient, doctor, admin] }
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Missing fields
+ *       409:
+ *         description: Email already registered
+ */
 export const signup = async (req, res) => {
     const { name, email, password, phone, role } = req.body;
     if (!name || !email || !password) {
@@ -43,6 +70,30 @@ export const signup = async (req, res) => {
     });
 };
 
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Log in a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email: { type: string, format: email }
+ *               password: { type: string }
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       400:
+ *         description: Missing fields
+ *       401:
+ *         description: Invalid credentials
+ */
 export const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {

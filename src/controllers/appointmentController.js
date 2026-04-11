@@ -5,7 +5,26 @@ import DoctorAvailability from '../models/DoctorAvailability.js';
 import { APPOINTMENT_STATUS } from '../config/constants.js';
 import AppError from '../utils/AppError.js';
 
-// Book a new appointment (Patient)
+/**
+ * @openapi
+ * /appointment:
+ *   post:
+ *     tags: [Appointments]
+ *     summary: Book an appointment
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created
+ *   get:
+ *     tags: [Appointments]
+ *     summary: Get patient appointments
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 export const bookAppointment = async (req, res) => {
   const patientId = req.user.id;
   const { doctorId, scheduledDate, startTime, endTime, notes } = req.body;
@@ -39,7 +58,23 @@ export const getPatientAppointments = async (req, res) => {
   return res.status(200).json({ success: true, data: appointments });
 };
 
-// Cancel appointment
+/**
+ * @openapi
+ * /appointment/{id}/cancel:
+ *   put:
+ *     tags: [Appointments]
+ *     summary: Cancel appointment
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Cancelled successfully
+ */
 export const cancelAppointment = async (req, res) => {
   const userId = req.user.id;
   const userRole = req.user.role;
@@ -65,6 +100,16 @@ export const cancelAppointment = async (req, res) => {
   return res.status(200).json({ success: true, message: 'Appointment cancelled successfully', data: appointment });
 };
 
+/**
+ * @openapi
+ * /appointment/doctors:
+ *   get:
+ *     tags: [Appointments]
+ *     summary: List all doctors
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 // List all doctors (for patients to browse)
 export const getDoctors = async (req, res) => {
   const doctors = await DoctorProfile.find()
@@ -73,6 +118,21 @@ export const getDoctors = async (req, res) => {
   return res.status(200).json({ success: true, data: doctors });
 };
 
+/**
+ * @openapi
+ * /appointment/doctor/{doctorId}/availability:
+ *   get:
+ *     tags: [Appointments]
+ *     summary: Get doctor availability for booking
+ *     parameters:
+ *       - in: path
+ *         name: doctorId
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 // Get specific doctor's availability (for booking)
 export const getDoctorAvailabilityForBooking = async (req, res) => {
   const { doctorId } = req.params;

@@ -4,6 +4,26 @@ import Appointment from '../models/Appointment.js';
 import AppError from '../utils/AppError.js';
 
 // Get current doctor's profile
+/**
+ * @openapi
+ * /doctor/profile:
+ *   get:
+ *     tags: [Doctors]
+ *     summary: Get current doctor profile
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *   put:
+ *     tags: [Doctors]
+ *     summary: Update current doctor profile
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 export const getDoctorProfile = async (req, res) => {
   const userId = req.user.id;
   const profile = await DoctorProfile.findOne({ userId }).lean();
@@ -25,7 +45,26 @@ export const updateDoctorProfile = async (req, res) => {
   return res.status(200).json({ success: true, data: profile });
 };
 
-// Get current doctor's availability
+/**
+ * @openapi
+ * /doctor/availability:
+ *   get:
+ *     tags: [Doctors]
+ *     summary: Get doctor availability
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ *   post:
+ *     tags: [Doctors]
+ *     summary: Add availability slot
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       201:
+ *         description: Created
+ */
 export const getDoctorAvailability = async (req, res) => {
   const userId = req.user.id;
   const profile = await DoctorProfile.findOne({ userId });
@@ -53,7 +92,23 @@ export const addDoctorAvailability = async (req, res) => {
   return res.status(201).json({ success: true, data: availability });
 };
 
-// Delete an availability slot
+/**
+ * @openapi
+ * /doctor/availability/{id}:
+ *   delete:
+ *     tags: [Doctors]
+ *     summary: Delete availability slot
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Deleted successfully
+ */
 export const deleteDoctorAvailability = async (req, res) => {
   const userId = req.user.id;
   const { id } = req.params;
@@ -71,7 +126,18 @@ export const deleteDoctorAvailability = async (req, res) => {
   return res.status(200).json({ success: true, message: 'Availability slot deleted successfully' });
 };
 
-// Get doctor's appointments
+/**
+ * @openapi
+ * /doctor/appointments:
+ *   get:
+ *     tags: [Doctors]
+ *     summary: Get doctor appointments
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 export const getDoctorAppointments = async (req, res) => {
   const userId = req.user.id;
   const appointments = await Appointment.find({ doctorId: userId })
