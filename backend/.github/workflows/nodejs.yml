@@ -1,23 +1,27 @@
-name: Node.js CI
+name: Backend Tests
 
 on:
   push:
     branches: [ main, backend/main, backend/auth ]
   pull_request:
-    branches: [ main, backend/main ]
+    branches: [ main, backend/main, backend/auth ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 18
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18
+          cache: npm
+
       - name: Install dependencies
         run: npm ci
-      - name: Run lint (if configured)
-        run: echo "No linter configured"
-      - name: Run test
+
+      - name: Run tests
         run: npm test
