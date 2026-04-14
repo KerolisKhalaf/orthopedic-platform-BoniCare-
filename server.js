@@ -14,6 +14,7 @@ import appointmentRouter from './src/routes/appointment.js';
 
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './src/swagger.js';
+import { initSocket } from './src/chat/socket.js';
 
 dotenv.config();
 const app = express();
@@ -45,6 +46,10 @@ app.get('/', (req, res) => res.send('BoniCare Orthopedic Platform API running'))
 
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Initialize Socket.IO
+initSocket(server).then(() => console.log('Socket.IO initialized')).catch(err => console.error('Socket.IO init failed:', err));
+
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {

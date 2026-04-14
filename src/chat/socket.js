@@ -1,0 +1,30 @@
+import { Server } from 'socket.io';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { createClient } from 'redis';
+import { saveMessage, updateMessageStatus } from '../services/messageService.js';
+import { sendNotification } from '../services/notificationService.js';
+
+export const initSocket = async (server) => {
+  const io = new Server(server, { cors: { origin: '*' } });
+  const pubClient = createClient({ url: process.env.REDIS_URL });
+  const subClient = pubClient.duplicate();
+
+  await Promise.all([pubClient.connect(), subClient.connect()]);
+  io.adapter(createAdapter(pubClient, subClient));
+
+  io.on('connection', (socket) => {
+    socket.on('sendMessage', async (data) => {
+      try {
+        const message = await saveMessage(data);
+        await sendNotification(data.receiverId, 'chat_message', 'push', data.content);
+        io.to(data.conversationId).emit('newMessage', message);
+      } catch (err) {
+        socket.emit('error', 'Message could not be saved.');
+      }
+    });
+
+    socket.on('joinConversation', (id) => socket.join(id));
+  });
+
+  return io;
+};
