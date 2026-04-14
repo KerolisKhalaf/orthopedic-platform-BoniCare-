@@ -1265,7 +1265,7 @@ This project is distributed under the **ISC License**. See the [LICENSE](LICENSE
 
 <div align="center">
 
-**Made with ❤️ by the BoniCare Team**
+**Made with ❤️ by kerolis khalaf shafik**
 
 [⬆ Back to top](#-bonicare-orthopedic-platform)
 
