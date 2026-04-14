@@ -1,6 +1,5 @@
 BoniCare Orthopedic Platform
 
-  !BoniCare Logo (https://via.placeholder.com/150?text=BoniCare)
 
   BoniCare is a professional, production-ready healthcare backend platform designed specifically for orthopedic clinics
   and practitioners. It provides a comprehensive suite of tools for managing patient records, doctor availability,
