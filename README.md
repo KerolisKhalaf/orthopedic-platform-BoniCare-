@@ -81,7 +81,7 @@ BoniCare Orthopedic Platform
   ⚙️ Installation & Setup
 
   1. Clone the repository
-   1 git clone https://github.com/your-repo/bonicare.git
+   1 git clone https://github.com/KerolisKhalaf/orthopedic-platform-BoniCare-.git
    2 cd bonicare
 
   2. Install dependencies
