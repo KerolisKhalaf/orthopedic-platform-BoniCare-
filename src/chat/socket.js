@@ -26,5 +26,16 @@ export const initSocket = async (server) => {
     socket.on('joinConversation', (id) => socket.join(id));
   });
 
+
+  // For debugging: log all events
+io.on("connection", (socket) => {
+  console.log("✅ CONNECTED:", socket.id);
+
+  socket.onAny((event, data) => {
+    console.log("📩 EVENT:", event, data);
+  });
+});
+
   return io;
 };
+

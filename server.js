@@ -48,7 +48,7 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // Initialize Socket.IO
-initSocket(server).then(() => console.log('Socket.IO initialized')).catch(err => console.error('Socket.IO init failed:', err));
+await initSocket(server).then(() => console.log('Socket.IO initialized')).catch(err => console.error('Socket.IO init failed:', err));
 
 
 // Handle unhandled promise rejections

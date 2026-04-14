@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket Test</title>
+</head>
+<body>
+
+<h2>Socket.IO Test</h2>
+
+<input id="msg" placeholder="message" />
+<input id="room" placeholder="conversationId" />
+<button onclick="join()">Join Room</button>
+<button onclick="send()">Send Message</button>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+  const socket = io("http://localhost:3000");
+
+  socket.on("connect", () => {
+    console.log("Connected:", socket.id);
+  });
+
+  socket.on("newMessage", (data) => {
+    console.log("New Message:", data);
+  });
+
+  function join() {
+    const room = document.getElementById("room").value;
+    socket.emit("joinConversation", room);
+  }
+
+  function send() {
+    const msg = document.getElementById("msg").value;
+    const room = document.getElementById("room").value;
+
+    socket.emit("sendMessage", {
+      conversationId: room,
+      receiverId: "123",
+      content: msg
+    });
+  }
+</script>
+
+</body>
+</html>
