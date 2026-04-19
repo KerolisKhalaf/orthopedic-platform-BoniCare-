@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get patient dashboard
+method: GET
+url: '{{baseUrl}}/api/v1/patient/dashboard'
+order: 1000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'

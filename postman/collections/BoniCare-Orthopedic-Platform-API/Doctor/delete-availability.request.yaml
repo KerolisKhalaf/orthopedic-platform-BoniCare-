@@ -1,0 +1,10 @@
+$kind: http-request
+name: Delete availability slot
+method: DELETE
+url: '{{baseUrl}}/api/v1/doctor/availability/{{availabilityId}}'
+order: 5000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'

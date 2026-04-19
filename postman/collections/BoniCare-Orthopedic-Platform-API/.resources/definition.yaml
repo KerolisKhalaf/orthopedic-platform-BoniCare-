@@ -1,0 +1,13 @@
+$kind: collection
+name: BoniCare Orthopedic Platform API
+variables:
+  - key: baseUrl
+    value: 'http://localhost:5000'
+  - key: token
+    value: ''
+  - key: doctorId
+    value: ''
+  - key: appointmentId
+    value: ''
+  - key: availabilityId
+    value: ''

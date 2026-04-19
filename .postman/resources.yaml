@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: c89089ab-716a-455c-850b-5147c9cce7cd
+
+cloudResources:
+  collections:
+    ..\postman\collections\BoniCare-Orthopedic-Platform-API: 46262004-50f32fac-7c3a-424c-b64f-ff3fe3313bde
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/

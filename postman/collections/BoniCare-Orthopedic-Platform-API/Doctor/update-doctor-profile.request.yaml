@@ -1,0 +1,26 @@
+$kind: http-request
+name: Update doctor profile
+method: PUT
+url: '{{baseUrl}}/api/v1/doctor/profile'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "specialty": "Orthopedic Surgery",
+      "bio": "Experienced orthopedic surgeon with 10 years of practice.",
+      "licenseNumber": "LIC-12345",
+      "yearsOfExperience": 10,
+      "hospitalInfo": {
+        "name": "City General Hospital",
+        "address": "123 Main St"
+      }
+    }

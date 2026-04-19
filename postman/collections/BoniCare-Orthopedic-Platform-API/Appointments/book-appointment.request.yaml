@@ -1,0 +1,23 @@
+$kind: http-request
+name: Book an appointment
+method: POST
+url: '{{baseUrl}}/api/v1/appointment/book'
+order: 3000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "doctorId": "{{doctorId}}",
+      "scheduledDate": "2026-05-01",
+      "startTime": "10:00",
+      "endTime": "10:30",
+      "notes": "Follow-up consultation"
+    }

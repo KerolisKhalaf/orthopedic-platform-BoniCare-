@@ -1,0 +1,10 @@
+$kind: http-request
+name: Get doctor appointments
+method: GET
+url: '{{baseUrl}}/api/v1/doctor/appointments'
+order: 6000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{token}}'

@@ -1,0 +1,12 @@
+$kind: http-request
+name: Get doctor profile
+method: GET
+url: "{{baseUrl}}/api/v1/doctor/profile"
+body:
+  type: formdata
+  content: []
+order: 1000
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
