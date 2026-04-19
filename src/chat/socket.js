@@ -2,7 +2,7 @@ import { Server } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createClient } from 'redis';
 import { saveMessage, updateMessageStatus } from '../services/messageService.js';
-import { sendNotification } from '../services/notificationService.js';
+import { sendNotification } from '../notification/notificationService.js';
 
 export const initSocket = async (server) => {
   const io = new Server(server, { cors: { origin: '*' } });

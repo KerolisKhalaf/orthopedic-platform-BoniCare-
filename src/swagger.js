@@ -66,11 +66,29 @@ const options = {
             output_json: { type: 'object' },
             confidence: { type: 'number' }
           }
+        },
+        Notification: {
+          type: 'object',
+          properties: {
+            userId: { type: 'string' },
+            type: { type: 'string', enum: ['chat_message', 'status_change'] },
+            channel: { type: 'string', enum: ['push', 'email'] },
+            status: { type: 'string', enum: ['pending', 'delivered', 'failed'] },
+            createdAt: { type: 'string', format: 'date-time' }
+          }
+        },
+        NotificationPreferences: {
+          type: 'object',
+          properties: {
+            userId: { type: 'string' },
+            pushEnabled: { type: 'boolean' },
+            emailEnabled: { type: 'boolean' }
+          }
         }
       }
     },
   },
-  apis: ['./src/routes/*.js', './src/controllers/*.js'],
+  apis: ['./src/routes/*.js', './src/controllers/*.js', './src/api/*.js'],
 };
 
 export const specs = swaggerJsdoc(options);

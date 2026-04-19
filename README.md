@@ -142,6 +142,9 @@ The project follows a **modular MVC (Model-View-Controller) pattern** with a ded
 ```
 orthopedic-platform-BoniCare-/
 ├── src/
+│   ├── api/                    # API configuration and endpoints
+│   │   └── notificationApi.js  # Notification preferences and token endpoints
+│   │
 │   ├── chat/                   # Socket.IO configuration and real-time events
 │   │   └── socket.js          # Socket.IO initialization and event handlers
 │   │
@@ -180,8 +183,7 @@ orthopedic-platform-BoniCare-/
 │   │
 │   ├── services/               # Core business logic services
 │   │   ├── fileService.js     # File upload and management logic
-│   │   ├── messageService.js  # Chat message handling
-│   │   └── notificationService.js # Email and push notifications
+│   │   └── messageService.js  # Chat message handling
 │   │
 │   ├── validators/             # Express-validator schemas
 │   │   ├── authValidators.js  # Auth request validation
@@ -758,37 +760,79 @@ GET /patient/dashboard
 ```
 POST /files/upload
 ```
-**Description**: Upload medical documents and files (X-rays, reports, scans)
+... (rest of the file upload section) ...
 
-**Authentication**: Required (Patient only)
+---
 
-**Content-Type**: multipart/form-data
+### 🔔 Notification Endpoints
 
-**Form Fields**:
-- `file`: Binary file (Max: 10MB)
-  - Supported formats: PDF, JPG, PNG, JPEG, DICOM
-- `fileType`: string (xray | scan | report | prescription | other)
-- `description`: string (optional)
+#### 1. **Get Notification Preferences**
+```
+GET /notification/preferences
+```
+**Description**: Retrieve notification settings for the logged-in user
 
-**Response** (201):
+**Authentication**: Required
+
+**Response** (200):
 ```json
 {
-  "success": true,
-  "message": "File uploaded successfully",
+  "status": "success",
   "data": {
     "_id": "ObjectId",
-    "fileName": "string",
-    "fileType": "string",
-    "fileSize": "number (bytes)",
-    "uploadedBy": "ObjectId",
-    "uploadDate": "ISO date",
-    "fileUrl": "string",
-    "description": "string"
+    "userId": "ObjectId",
+    "pushEnabled": true,
+    "emailEnabled": true
   }
 }
 ```
 
-**Errors**: 400 (Invalid file type), 413 (File too large), 500 (Upload failed)
+#### 2. **Update Notification Preferences**
+```
+PATCH /notification/preferences
+```
+**Description**: Update notification settings
+
+**Authentication**: Required
+
+**Request Body**:
+```json
+{
+  "pushEnabled": boolean,
+  "emailEnabled": boolean
+}
+```
+
+**Response** (200):
+```json
+{
+  "status": "success",
+  "data": { /* updated preferences */ }
+}
+```
+
+#### 3. **Update FCM Token**
+```
+POST /notification/token
+```
+**Description**: Update Firebase Cloud Messaging token for push notifications
+
+**Authentication**: Required
+
+**Request Body**:
+```json
+{
+  "fcmToken": "string"
+}
+```
+
+**Response** (200):
+```json
+{
+  "status": "success",
+  "message": "FCM token updated successfully"
+}
+```
 
 ---
 

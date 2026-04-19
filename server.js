@@ -11,6 +11,7 @@ import filesRouter from './src/routes/files.js';
 import patientRouter from './src/routes/patient.js';
 import doctorRouter from './src/routes/doctor.js';
 import appointmentRouter from './src/routes/appointment.js';
+import notificationRouter from './src/api/notificationApi.js';
 
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './src/swagger.js';
@@ -39,6 +40,7 @@ app.use('/api/v1/files', filesRouter);
 app.use('/api/v1/patient', patientRouter);
 app.use('/api/v1/doctor', doctorRouter);
 app.use('/api/v1/appointment', appointmentRouter);
+app.use('/api/v1/notification', notificationRouter);
 
 app.use(errorHandler);
 
