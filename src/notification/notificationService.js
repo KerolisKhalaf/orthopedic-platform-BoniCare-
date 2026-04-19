@@ -14,75 +14,85 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+const getNotificationPreferences = async (userId) => {
+    let prefs = await NotificationPreferences.findOne({ userId });
+    if (!prefs) {
+        prefs = await NotificationPreferences.create({ userId });
+    }
+    return prefs;
+};
+
+const sendPushNotification = async (user, type, content, userId) => {
+    if (!firebaseApp || !user.fcmToken) {
+        const reason = firebaseApp ? 'No_FCM_Token' : 'Firebase_Not_Init';
+        console.warn(
+            `[Notification] PUSH_SKIPPED userId=${userId} reason=${reason}`
+        );
+        return 'failed';
+    }
+
+    const message = {
+        notification: {
+            title: type === 'chat_message' ? 'New Chat Message' : 'Notification',
+            body: content,
+        },
+        token: user.fcmToken,
+    };
+
+    await admin.messaging().send(message);
+    console.log(`[Notification] PUSH_SENT userId=${userId} type=${type}`);
+    return 'delivered';
+};
+
+const sendEmailNotification = async (user, type, content, userId) => {
+    if (!user.email) {
+        console.warn(`[Notification] EMAIL_SKIPPED userId=${userId} reason=No_Email`);
+        return 'failed';
+    }
+
+    const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: user.email,
+        subject: type === 'chat_message' ? 'New Message on BoniCare' : 'Update from BoniCare',
+        text: content,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`[Notification] EMAIL_SENT userId=${userId} type=${type}`);
+    return 'delivered';
+};
+
+const logNotification = async ({ userId, type, channel, status }) => {
+    await Notification.create({
+        userId,
+        type,
+        channel,
+        status,
+    });
+};
+
 export const sendNotification = async (userId, type, channel, content) => {
     try {
-        // 1. Fetch user preferences
-        let prefs = await NotificationPreferences.findOne({ userId });
-        if (!prefs) {
-            // Default preferences if not set
-            prefs = await NotificationPreferences.create({ userId });
+        const prefs = await getNotificationPreferences(userId);
+
+        if ((channel === 'push' && !prefs.pushEnabled) || (channel === 'email' && !prefs.emailEnabled)) {
+            return;
         }
 
-        // Check if enabled for the channel
-        if (channel === 'push' && !prefs.pushEnabled) return;
-        if (channel === 'email' && !prefs.emailEnabled) return;
-
-        // 2. Fetch user details
         const user = await User.findById(userId);
         if (!user) throw new Error('User not found');
 
         let status = 'pending';
 
-        // 3. Send notification
         if (channel === 'push') {
-            if (!firebaseApp || !user.fcmToken) {
-                console.warn(`[Notification] PUSH_SKIPPED userId=${userId} reason=${!firebaseApp ? 'Firebase_Not_Init' : 'No_FCM_Token'}`);
-                status = 'failed';
-            } else {
-                const message = {
-                    notification: {
-                        title: type === 'chat_message' ? 'New Chat Message' : 'Notification',
-                        body: content,
-                    },
-                    token: user.fcmToken,
-                };
-                await admin.messaging().send(message);
-                console.log(`[Notification] PUSH_SENT userId=${userId} type=${type}`);
-                status = 'delivered';
-            }
+            status = await sendPushNotification(user, type, content, userId);
         } else if (channel === 'email') {
-            if (!user.email) {
-                console.warn(`[Notification] EMAIL_SKIPPED userId=${userId} reason=No_Email`);
-                status = 'failed';
-            } else {
-                const mailOptions = {
-                    from: process.env.FROM_EMAIL,
-                    to: user.email,
-                    subject: type === 'chat_message' ? 'New Message on BoniCare' : 'Update from BoniCare',
-                    text: content,
-                };
-                await transporter.sendMail(mailOptions);
-                console.log(`[Notification] EMAIL_SENT userId=${userId} type=${type}`);
-                status = 'delivered';
-            }
+            status = await sendEmailNotification(user, type, content, userId);
         }
 
-        // 4. Log notification
-        await Notification.create({
-            userId,
-            type,
-            channel,
-            status
-        });
-
+        await logNotification({ userId, type, channel, status });
     } catch (err) {
         console.error(`Notification failed for user ${userId}:`, err.message);
-        // Log failure
-        await Notification.create({
-            userId,
-            type,
-            channel,
-            status: 'failed'
-        });
+        await logNotification({ userId, type, channel, status: 'failed' });
     }
 };

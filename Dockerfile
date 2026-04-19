@@ -7,11 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
-
-# Install nodemon globally
-RUN npm install -g nodemon
+# Install dependencies and nodemon
+RUN npm install && npm install -g nodemon
 
 # Copy source code
 COPY . .
