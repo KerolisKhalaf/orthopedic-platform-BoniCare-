@@ -16,6 +16,7 @@ import notificationRouter from './src/api/notificationApi.js';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './src/swagger.js';
 import { initSocket } from './src/chat/socket.js';
+import './src/notification/firebase.js';
 
 dotenv.config();
 const app = express();

@@ -1,25 +1,34 @@
 import admin from 'firebase-admin';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-let firebaseApp;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
-    try {
-        firebaseApp = admin.initializeApp({
-            credential: admin.credential.cert({
-                projectId: process.env.FIREBASE_PROJECT_ID,
-                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-                privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-            }),
-        });
-        console.log('Firebase Admin SDK initialized successfully');
-    } catch (error) {
-        console.error('Error initializing Firebase Admin SDK:', error);
-    }
-} else {
-    console.warn('Firebase configuration missing. Push notifications will be disabled.');
+let firebaseApp = null;
+
+
+try {
+    // Priority: 1. ENV variable, 2. Default hardcoded path (relative to root)
+    const serviceAccountRelativePath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH || '../config/bonicare-notifications-sys-firebase-adminsdk-fbsvc-71583c7a6d.json';
+    
+    // Resolve path relative to this file
+    const resolvedPath = path.resolve(__dirname, serviceAccountRelativePath);
+    
+    const serviceAccount = JSON.parse(readFileSync(resolvedPath, 'utf8'));
+
+    firebaseApp = admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+    });
+
+    console.log('✅ Firebase Admin SDK initialized successfully');
+} catch (error) {
+    console.error('❌ Error initializing Firebase Admin SDK:', error.message);
+    console.warn('⚠️ Push notifications will be disabled.');
 }
 
 export default firebaseApp;
