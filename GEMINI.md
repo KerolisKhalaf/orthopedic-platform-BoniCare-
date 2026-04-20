@@ -1,6 +1,6 @@
 ﻿# backend Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-11
+Auto-generated from all feature plans. Last updated: 2026-04-20
 
 ## Active Technologies
 - Node.js (v20+), ES6 modules + Express.js (v5.1), Mongoose (v8.19), express-validator (v7.3) (001-appointment-models)
@@ -9,6 +9,7 @@ Auto-generated from all feature plans. Last updated: 2026-04-11
 - MongoDB (Mongoose) (001-appointment-models)
 - Node.js v20+, ES6 Modules + `mongoose`, `@faker-js/faker`, `bcrypt` (005-database-seeding)
 - [if applicable, e.g., PostgreSQL, CoreData, files or N/A] (006-openapi-spec)
+- Node.js (v20+) + Express.js, Mongoose, Stripe SDK (latest) (009-stripe-payment-integration)
 
 - [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION] (001-appointment-models)
 
@@ -29,9 +30,9 @@ cd src; pytest; ruff check .
 [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]: Follow standard conventions
 
 ## Recent Changes
+- 009-stripe-payment-integration: Added Node.js (v20+) + Express.js, Mongoose, Stripe SDK (latest)
+- 009-stripe-payment-integration: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 - 006-openapi-spec: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
-- 005-database-seeding: Added Node.js v20+, ES6 Modules + `mongoose`, `@faker-js/faker`, `bcrypt`
-- 004-server-error-handlers: Added Node.js (v20+), ES6 modules + Express.js (v5.1), Mongoose (v8.19), express-validator (v7.3)
 
 
 <!-- MANUAL ADDITIONS START -->
