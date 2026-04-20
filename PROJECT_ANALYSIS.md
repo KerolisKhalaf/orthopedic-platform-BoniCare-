@@ -15,11 +15,11 @@
 ```
 src/
 ├── config/           ✅ DB connection & constants
-├── controllers/      ✅ Auth, Patient, Files, Appointments, Doctors
+├── controllers/      ✅ Auth, Patient, Files, Appointments, Doctors, Payment
 ├── middleware/       ✅ Auth (fixed), error handling, upload
-├── models/           ✅ User, Patient, MedicalFile, AiReport, DoctorProfile, DoctorAvailability, Appointment
-├── routes/           ✅ Auth, Files, Patient, Appointment, Doctor
-├── validators/       ✅ Auth, Files, Appointments, Doctors
+├── models/           ✅ User, Patient, MedicalFile, AiReport, DoctorProfile, DoctorAvailability, Appointment, Payment
+├── routes/           ✅ Auth, Files, Patient, Appointment, Doctor, Payment
+├── validators/       ✅ Auth, Files, Appointments, Doctors, Payment
 ```
 
 ### Current API Endpoints (v1-prefixed)
@@ -119,6 +119,11 @@ GET    /api/v1/appointment/my-appointments
 - `GET    /api/v1/appointment/my-appointments` - ✅ Done
 - `PUT    /api/v1/appointment/:id/cancel` - ✅ Done
 - `GET    /api/v1/appointment/doctors`  - ✅ Done (list with availability)
+
+### 💳 Payment Endpoints
+- `POST   /api/v1/payment/create-intent` - ✅ Done
+- `POST   /api/v1/payment/webhook`       - ✅ Done (Status Sync)
+- `POST   /api/v1/payment/refund`        - ✅ Done (Partial/Full)
 
 ### 📁 File Management Endpoints
 - `POST   /api/v1/files/upload`         - ⚠️ Done (fs only, needs MongoDB)
