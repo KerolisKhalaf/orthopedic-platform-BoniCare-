@@ -146,14 +146,14 @@ export const issueRefund = async (req, res, next) => {
             return next(new AppError('Only completed payments can be refunded', 400));
         }
 
-        // T021: Stripe refund call
+        // Process refund via Stripe
         const refund = await stripeInstance.refunds.create({
             payment_intent: payment.transactionId,
-            amount: amount, // Optional for partial refunds
+            amount: amount, 
             reason: reason || 'requested_by_customer'
         });
 
-        // T022: Update database with refund info
+        // Log refund in database
         payment.refunds.push({
             refundId: refund.id,
             amount: amount || payment.amount,

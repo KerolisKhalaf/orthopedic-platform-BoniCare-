@@ -79,12 +79,13 @@ GET    /api/v1/appointment/my-appointments
 4. ✅ Create core validators for all endpoints
 5. ⚠️ Fix file upload to save metadata to MongoDB
 
-### Phase 2: Appointment & Doctor System (70% Complete)
+### Phase 2: Appointment & Doctor System (90% Complete)
 1. ✅ Doctor Profile (extends User via ref)
 2. ✅ Doctor Availability management
 3. ✅ Appointment booking & overlap detection
-4. ⚠️ Patient profile management (CRUD)
-5. ⚠️ Advanced appointment filtering (by date range, doctor, etc.)
+4. ✅ Stripe Payment Integration (Feature 009)
+5. ⚠️ Patient profile management (CRUD)
+6. ⚠️ Advanced appointment filtering (by date range, doctor, etc.)
 
 ### Phase 3: Integrate AI Models (Starting)
 1. ⚠️ Create `src/services/aiAnalysisService.js` stub

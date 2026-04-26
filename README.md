@@ -6,6 +6,9 @@
 ![Node.js](https://img.shields.io/badge/Node.js-v20%2B-brightgreen)
 ![Express](https://img.shields.io/badge/Express-v5.1-blue)
 ![MongoDB](https://img.shields.io/badge/MongoDB-v8.19-green)
+![Stripe](https://img.shields.io/badge/Stripe-Payment-blue)
+![Redis](https://img.shields.io/badge/Redis-Cache-red)
+![Firebase](https://img.shields.io/badge/Firebase-Notifications-orange)
 ![License](https://img.shields.io/badge/license-ISC-blue)
 
 **A professional, production-ready healthcare backend platform designed specifically for orthopedic clinics and practitioners.**
@@ -134,6 +137,19 @@ The project follows a **modular MVC (Model-View-Controller) pattern** with a ded
 - **Model Layer**: Defines Mongoose schemas and database structure
 - **Middleware**: Handles cross-cutting concerns (Authentication, Error Handling, Request Logging)
 - **Validators**: Ensures data integrity through express-validator schemas
+
+---
+
+## 💳 Payment Flow Integration
+
+BoniCare integrates with **Stripe** to handle professional consultation fees and deposits.
+
+1. **Initiation**: Patient chooses an appointment and selects a payment option (Deposit/Full).
+2. **Intent**: Backend creates a Stripe PaymentIntent and returns a `clientSecret`.
+3. **Checkout**: Frontend uses the secret to securely collect payment via Stripe.
+4. **Verification**: Stripe sends an asynchronous webhook to the backend upon success/failure.
+5. **Synchronization**: Backend verifies the webhook signature and performs an **atomic transaction** to update both the `Payment` and `Appointment` records.
+6. **Notification**: User is instantly notified via Firebase (Push) and Nodemailer (Email).
 
 ---
 
@@ -508,6 +524,75 @@ PUT /appointment/:id/cancel
 ```
 
 **Errors**: 404 (Appointment not found), 400 (Already cancelled)
+
+---
+
+### 💳 Payment Endpoints
+
+#### 1. **Create Payment Intent**
+```
+POST /payment/create-intent
+```
+**Description**: Initialize a Stripe Payment Intent for an appointment
+
+**Authentication**: Required (Patient only)
+
+**Request Body**:
+```json
+{
+  "appointmentId": "ObjectId",
+  "amount": 5000,
+  "type": "full_payment | deposit"
+}
+```
+
+**Response** (200):
+```json
+{
+  "status": "success",
+  "clientSecret": "pi_..._secret_..."
+}
+```
+
+#### 2. **Stripe Webhook**
+```
+POST /payment/webhook
+```
+**Description**: Internal endpoint for Stripe to sync payment status asynchronously
+
+**Authentication**: Stripe Signature Verification
+
+**Response** (200):
+```json
+{
+  "received": true
+}
+```
+
+#### 3. **Issue Refund**
+```
+POST /payment/refund
+```
+**Description**: Issue a full or partial refund for a consultation
+
+**Authentication**: Required (Doctor, Admin)
+
+**Request Body**:
+```json
+{
+  "paymentId": "ObjectId",
+  "amount": 2000,
+  "reason": "string (optional)"
+}
+```
+
+**Response** (200):
+```json
+{
+  "status": "success",
+  "data": { /* updated payment record */ }
+}
+```
 
 ---
 
@@ -1220,6 +1305,43 @@ taskkill /PID <PID> /F
 - **File Compression**: Gzip compression on responses
 - **Request Validation**: Early validation prevents server load
 - **Error Handling**: Efficient error processing and logging
+
+---
+
+## 🗺️ User Journeys
+
+### 👤 Patient Journey
+```mermaid
+graph TD
+    A[Search Doctors] --> B[View Availability]
+    B --> C[Book Appointment]
+    C --> D{Payment Option}
+    D -- Deposit --> E[Stripe Checkout]
+    D -- Full --> E
+    E --> F{Webhook Sync}
+    F -- Success --> G[Confirmed & Notify]
+    F -- Failure --> H[Payment Failed]
+    G --> I[Start Chat]
+```
+
+### 👨‍⚕️ Doctor Journey
+```mermaid
+graph TD
+    A[Set Availability] --> B[Manage Schedule]
+    B --> C[View Booked Appointments]
+    D[Patient Chat] --> E[Consultation]
+    E --> F{Canceled?}
+    F -- Yes --> G[Initiate Partial Refund]
+    F -- No --> H[Complete Appointment]
+```
+
+### 🔑 Admin Journey
+```mermaid
+graph TD
+    A[Monitor Transactions] --> B[System Analytics]
+    B --> C[Manage Users]
+    C --> D[Audit Logs]
+```
 
 ---
 
