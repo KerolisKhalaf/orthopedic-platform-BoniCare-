@@ -10,6 +10,7 @@ const medicalFileSchema = new mongoose.Schema({
   path: String,
   modality: String, // X-ray, MRI, CT...
   part: String, // knee, shoulder...
+  aiReports: [{ type: mongoose.Schema.Types.ObjectId, ref: 'AiReport' }],
   uploadedAt: { type: Date, default: Date.now }
 });
 

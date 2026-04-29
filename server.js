@@ -13,6 +13,7 @@ import doctorRouter from './src/routes/doctor.js';
 import appointmentRouter from './src/routes/appointment.js';
 import notificationRouter from './src/api/notificationApi.js';
 import paymentRouter from './src/routes/payment.js';
+import aiRouter from './src/routes/aiRoutes.js';
 
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './src/swagger.js';
@@ -54,6 +55,7 @@ app.use('/api/v1/doctor', doctorRouter);
 app.use('/api/v1/appointment', appointmentRouter);
 app.use('/api/v1/notification', notificationRouter);
 app.use('/api/v1/payment', paymentRouter);
+app.use('/api/v1/ai', aiRouter);
 
 // Root Endpoint
 app.get('/', (req, res) => res.send('BoniCare Orthopedic Platform API running'));
