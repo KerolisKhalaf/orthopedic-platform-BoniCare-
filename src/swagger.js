@@ -49,7 +49,10 @@ const options = {
             patientId: { type: 'string' },
             doctorId: { type: 'string' },
             scheduledDate: { type: 'string', format: 'date-time' },
-            status: { type: 'string' }
+            startTime: { type: 'string', format: 'date-time' },
+            endTime: { type: 'string', format: 'date-time' },
+            status: { type: 'string' },
+            notes: { type: 'string' }
           }
         },
         MedicalFile: {
@@ -83,6 +86,33 @@ const options = {
             userId: { type: 'string' },
             pushEnabled: { type: 'boolean' },
             emailEnabled: { type: 'boolean' }
+          }
+        },
+        Payment: {
+          type: 'object',
+          properties: {
+            transactionId: { type: 'string' },
+            userId: { type: 'string' },
+            appointmentId: { type: 'string' },
+            amount: { type: 'number' },
+            currency: { type: 'string' },
+            type: { type: 'string', enum: ['full_payment', 'deposit'] },
+            status: { type: 'string', enum: ['pending', 'completed', 'failed', 'refunded'] },
+            paymentMethod: { type: 'string' },
+            refunds: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/Refund' }
+            }
+          }
+        },
+        Refund: {
+          type: 'object',
+          properties: {
+            refundId: { type: 'string' },
+            amount: { type: 'number' },
+            status: { type: 'string' },
+            reason: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' }
           }
         }
       }
