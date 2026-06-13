@@ -6,6 +6,28 @@ import aiClient from '../services/aiClient.js';
 /**
  * Controller for handling AI Prediction and Persistence
  */
+/**
+ * @openapi
+ * /ai/predict:
+ *   post:
+ *     tags: [AI]
+ *     summary: Get AI prediction and save report
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Prediction generated
+ */
 export const getAndSavePrediction = async (req, res) => {
     try {
         const { patientId, fileId, features, doctorId } = req.body;
@@ -86,7 +108,26 @@ export const getAndSavePrediction = async (req, res) => {
     }
 };
 
-
+/**
+ * @openapi
+ * /ai/bone-fracture:
+ *   post:
+ *     tags: [AI]
+ *     summary: Detect bone fracture from image
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Prediction result
+ */
 export const predictBoneFracture = async (req, res) => {
     try {
         if (!req.file) {
@@ -114,6 +155,16 @@ export const predictBoneFracture = async (req, res) => {
 
 /**
  * Health check for AI Service
+ */
+/**
+ * @openapi
+ * /ai/health:
+ *   get:
+ *     tags: [AI]
+ *     summary: Check AI service health
+ *     responses:
+ *       200:
+ *         description: AI service is running
  */
 export const checkAiStatus = async (req, res) => {
     try {
