@@ -14,6 +14,53 @@ const getStripe = () => {
     return stripe;
 };
 
+/**
+ * @openapi
+ * /payment/create-intent:
+ *   post:
+ *     tags: [Payments]
+ *     summary: Create Stripe payment intent for an appointment
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - appointmentId
+ *               - amount
+ *               - type
+ *             properties:
+ *               appointmentId:
+ *                 type: string
+ *                 example: 65f1c9a8b12a4c0012abc123
+ *               amount:
+ *                 type: number
+ *                 example: 5000
+ *               type:
+ *                 type: string
+ *                 enum: [full_payment, deposit]
+ *                 example: full_payment
+ *     responses:
+ *       200:
+ *         description: Payment intent created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 clientSecret:
+ *                   type: string
+ *       404:
+ *         description: Appointment not found
+ *       401:
+ *         description: Unauthorized
+ */
 export const createPaymentIntent = async (req, res, next) => {
     const { appointmentId, amount, type } = req.body;
     const userId = req.user.id;
@@ -61,6 +108,28 @@ export const createPaymentIntent = async (req, res, next) => {
     }
 };
 
+/**
+ * @openapi
+ * /payment/webhook:
+ *   post:
+ *     tags: [Payments]
+ *     summary: Stripe webhook handler (payment status updates)
+ *     description: Handles Stripe events like payment_intent.succeeded and payment_intent.payment_failed
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             description: Raw Stripe event payload
+ *     responses:
+ *       200:
+ *         description: Webhook processed successfully
+ *       400:
+ *         description: Invalid webhook signature
+ *       500:
+ *         description: Processing error
+ */
 export const handleWebhook = async (req, res, next) => {
     const sig = req.headers['stripe-signature'];
     const stripeInstance = getStripe();
@@ -132,6 +201,50 @@ export const handleWebhook = async (req, res, next) => {
     }
 };
 
+/**
+ * @openapi
+ * /payment/refund:
+ *   post:
+ *     tags: [Payments]
+ *     summary: Issue refund for a completed payment
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - paymentId
+ *             properties:
+ *               paymentId:
+ *                 type: string
+ *                 example: 65f1c9a8b12a4c0012abc999
+ *               amount:
+ *                 type: number
+ *                 example: 5000
+ *               reason:
+ *                 type: string
+ *                 example: requested_by_customer
+ *     responses:
+ *       200:
+ *         description: Refund processed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Invalid request or payment not eligible for refund
+ *       404:
+ *         description: Payment not found
+ */
 export const issueRefund = async (req, res, next) => {
     const { paymentId, amount, reason } = req.body;
     const stripeInstance = getStripe();
