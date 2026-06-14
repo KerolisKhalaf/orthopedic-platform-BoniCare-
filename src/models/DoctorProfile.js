@@ -16,20 +16,16 @@ const doctorProfileSchema = new mongoose.Schema({
   },
   specialty: {
     type: String,
-    required: true
   },
   bio: {
     type: String,
-    required: true
   },
   licenseNumber: {
     type: String,
-    required: true,
     unique: true
   },
   yearsOfExperience: {
     type: Number,
-    required: true
   },
   hospitalInfo: {
     type: String
