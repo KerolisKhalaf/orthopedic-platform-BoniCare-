@@ -10,11 +10,14 @@ const userSchema = new mongoose.Schema({
     createdAt: {type: Date, default: Date.now}
 });
 
+
 userSchema.post('save', async function(doc, next) {
+  // هذا الشرط سيمنع الـ Hook من العمل أثناء الاختبارات فقط
+  if (process.env.NODE_ENV === 'test') return next();
+
   try {
     if (doc.role === 'doctor') {
       const DoctorProfile = (await import('./DoctorProfile.js')).default;
-      // استخدم upsert بدلاً من create
       await DoctorProfile.findOneAndUpdate(
         { userId: doc._id }, 
         { userId: doc._id }, 
@@ -33,4 +36,7 @@ userSchema.post('save', async function(doc, next) {
     next(error);
   }
 });
+
+
+
 export default mongoose.model('User', userSchema);
