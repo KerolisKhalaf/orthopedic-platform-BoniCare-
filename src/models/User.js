@@ -13,18 +13,24 @@ const userSchema = new mongoose.Schema({
 userSchema.post('save', async function(doc, next) {
   try {
     if (doc.role === 'doctor') {
-      // استخدام Dynamic Import لحل مشكلة Circular Dependency
       const DoctorProfile = (await import('./DoctorProfile.js')).default;
-      await DoctorProfile.create({ userId: doc._id });
+      // استخدم upsert بدلاً من create
+      await DoctorProfile.findOneAndUpdate(
+        { userId: doc._id }, 
+        { userId: doc._id }, 
+        { upsert: true, new: true }
+      );
     } else if (doc.role === 'patient') {
-      // استخدام Dynamic Import لحل مشكلة Circular Dependency
       const Patient = (await import('./patient.js')).default;
-      await Patient.create({ user: doc._id });
+      await Patient.findOneAndUpdate(
+        { user: doc._id }, 
+        { user: doc._id }, 
+        { upsert: true, new: true }
+      );
     }
     next();
   } catch (error) {
-    next(error); // تمرير الخطأ للميدل وير العام
+    next(error);
   }
 });
-
 export default mongoose.model('User', userSchema);
