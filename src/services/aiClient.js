@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import fs from 'fs/promises';
-//import logger from '../utils/logger.js';
+import logger from '../utils/logger.js';
 import AppError from '../utils/AppError.js';
 
 dotenv.config();
@@ -152,9 +152,9 @@ class AIServiceClient {
             output_json: {
                 label: prediction.label,
                 prediction: prediction.prediction,
-                probabilities: prediction.confidence
+                probabilities: prediction.probabilities || []
             },
-            confidence: Math.max(...(prediction.confidence || [0]))
+            confidence: prediction.confidence || 0
         };
     }
 }

@@ -9,6 +9,8 @@ const router = express.Router();
  * @desc Get AI prediction and persist to database linked to patient
  * @access Private
  */
+console.log('AI Controller:', aiController);
+console.log('getAndSavePrediction:', aiController.getAndSavePrediction);
 router.post('/predict', aiController.getAndSavePrediction);
 router.post('/bone-fracture', upload.single('file'), aiController.predictBoneFracture);
 
