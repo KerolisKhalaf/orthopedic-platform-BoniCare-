@@ -1,7 +1,7 @@
 import Patient from '../models/patient.js';
-import User from '../models/User.js';
 import MedicalFile from '../models/medicalFile.js'; 
-import AiReport from '../models/AiReport.js'; 
+import AiReport from '../models/AiReport.js';
+import Appointment from '../models/Appointment.js';
 import AppError from '../utils/AppError.js';
 
 /**
@@ -32,7 +32,10 @@ export const getPatientDashboard = async (req, res) => {
   // الآن نجلب ملفات المريض، التقارير، المواعيد (نماذج بسيطة)
   const files = await MedicalFile.find({ patient: patient._id }).sort({ uploadedAt: -1 }).lean();
   const ai_reports = await AiReport.find({ patient: patient._id }).sort({ createdAt: -1 }).lean();
-  const appointments = []; 
+  const appointments = await Appointment.find({ patientId: userId })
+    .populate('doctorId', 'name email')
+    .sort({ scheduledDate: -1 })
+    .lean();
 
   return res.json({
     success: true,

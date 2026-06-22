@@ -79,7 +79,9 @@ npm run seed
 ```bash
 npm run dev
 ```
-The server will be available at `http://localhost:3000`.
+The server will be available at `http://localhost:3001`.
+
+> **Port note:** If port 3000 is used by Grafana or another service, set `PORT=3001` in `.env` and point the frontend `apiUrl` to `http://localhost:3001/api/v1`.
 
 ---
 

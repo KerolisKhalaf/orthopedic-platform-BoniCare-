@@ -40,7 +40,7 @@ export const signup = async (req, res) => {
     
     const existing = await User.findOne({ email });
     if (existing) {
-        throw new AppError('Email already registered', 409);
+        throw new AppError('This email address is already registered', 409);
     }
     
     const hash = await bcrypt.hash(password, saltRounds);
@@ -102,12 +102,12 @@ export const login = async (req, res) => {
     
     const user = await User.findOne({ email });
     if (!user) {
-        throw new AppError('Invalid credentials', 401);
+        throw new AppError('Incorrect email or password', 401);
     }
     
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
-        throw new AppError('Invalid credentials', 401);
+        throw new AppError('Incorrect email or password', 401);
     }
     
     const token = jwt.sign(

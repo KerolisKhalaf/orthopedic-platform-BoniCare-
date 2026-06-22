@@ -20,7 +20,10 @@ userSchema.post('save', async function(doc, next) {
       const DoctorProfile = (await import('./DoctorProfile.js')).default;
       await DoctorProfile.findOneAndUpdate(
         { userId: doc._id }, 
-        { userId: doc._id }, 
+        { 
+          userId: doc._id,
+          licenseNumber: `PENDING-${doc._id.toString()}`,
+        }, 
         { upsert: true, new: true }
       );
     } else if (doc.role === 'patient') {
