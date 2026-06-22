@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import fs from 'fs/promises';
-import logger from '../utils/logger.js';
+//import logger from '../utils/logger.js';
 import AppError from '../utils/AppError.js';
 
 dotenv.config();
